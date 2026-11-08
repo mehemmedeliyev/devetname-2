@@ -54,7 +54,7 @@ const GUEST = (() => {
     nm.textContent = GUEST;
     // uzun adlar üçün şrifti kiçilt
     const n = GUEST.length;
-    nm.style.setProperty("--nf", (n <= 14 ? 9.5 : n <= 22 ? 7.6 : n <= 32 ? 6.2 : 5.2) + "cqi");
+    nm.style.setProperty("--nf", (n <= 14 ? 11 : n <= 22 ? 8.8 : n <= 32 ? 7 : 5.8) + "cqi");
     document.getElementById("ad").value = GUEST;
     document.title = `${GUEST} — Camal & Aysel toya dəvət edir`;
   } else {
