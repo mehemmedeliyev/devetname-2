@@ -40,36 +40,24 @@ musicBtn.addEventListener("click", () => {
   else { audio.pause(); musicBtn.classList.remove("on"); musicBtn.setAttribute("aria-label", "Musiqini aç"); }
 });
 
-/* Qonağın adı: linkdə ?ad=Leyla%20xanım olarsa zərfdə "Hörmətli Leyla xanım" yazılır */
+/* Qonağın adı: linkdə ?ad=Leyla%20xanım olarsa cavab formasında avtomatik yazılır */
 const GUEST = (() => {
   const q = new URLSearchParams(location.search);
-  const v = (q.get("ad") || q.get("qonaq") || "").replace(/\s+/g, " ").trim().slice(0, 48);
-  return v;
+  return (q.get("ad") || q.get("qonaq") || "").replace(/\s+/g, " ").trim().slice(0, 48);
 })();
-(() => {
-  const to = document.getElementById("ivTo");
-  if (GUEST) {
-    to.textContent = `Hörmətli ${GUEST}`;
-    if (GUEST.length > 22) to.classList.add("long");
-    document.getElementById("ad").value = GUEST;
-    document.title = `${GUEST} — Camal & Aysel toya dəvət edir`;
-  }
-})();
+if (GUEST) {
+  document.getElementById("ad").value = GUEST;
+  document.title = `${GUEST} — Camal & Aysel toya dəvət edir`;
+}
 
+/* Toxunanda giriş şəkli yuxarı qalxır, altdan sayt görünür */
 function openInvite() {
   if (intro.classList.contains("open")) return;
+  window.scrollTo(0, 0);
   intro.classList.add("open");
   startMusic();
-  // fiyonkun mirvariləri səpələnir
-  pearlBurst(intro.querySelector(".ev-img"), { fx: 0.505, fy: 0.19, n: 50, power: 1.4, big: 1.7 });
-  const t1 = RM ? 50 : 2300, t2 = RM ? 400 : 3500;
-  setTimeout(() => {
-    intro.classList.add("gone");
-    root.classList.remove("locked");
-    root.classList.add("opened");
-    window.scrollTo(0, 0);
-  }, t1);
-  setTimeout(() => intro.remove(), t2);
+  setTimeout(() => { root.classList.remove("locked"); root.classList.add("opened"); }, RM ? 0 : 450);
+  setTimeout(() => intro.remove(), RM ? 400 : 1350);
 }
 root.classList.add("locked");
 intro.addEventListener("click", openInvite);
