@@ -64,55 +64,8 @@ intro.addEventListener("click", openInvite);
 intro.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openInvite(); } });
 intro.focus({ preventScroll: true });
 
-/* ---------- Proqram: sürüşdürdükcə çəkilən mirvari ipi ---------- */
-(() => {
-  const page = document.getElementById("p2");
-  const path = document.getElementById("neckPath");
-  const end = document.getElementById("neckEnd");
-  const items = [...page.querySelectorAll(".pi")].map((el) => ({ el, y: +el.dataset.y }));
-  if (RM) { items.forEach((i) => i.el.classList.add("in")); return; }
-
-  const len = path.getTotalLength();
-  const N = 500, samp = [];
-  let maxY = -Infinity;
-  for (let k = 0; k <= N; k++) {
-    const p = path.getPointAtLength((len * k) / N);
-    maxY = Math.max(maxY, p.y);
-    samp.push(maxY);
-  }
-  const endY = samp[N];
-  const R_END = 170;
-  path.style.strokeDasharray = `${len} ${len}`;
-  end.setAttribute("r", 0);
-
-  let cur = -200, target = -200, raf = 0;
-  function targetY() {
-    const r = page.getBoundingClientRect();
-    return ((innerHeight * 0.68 - r.top) * 1080) / r.width;
-  }
-  function draw(y) {
-    let k = 0;
-    while (k < N && samp[k + 1] <= y) k++;
-    path.style.strokeDashoffset = len * (1 - k / N);
-    end.setAttribute("r", Math.max(0, Math.min(1, (y - endY + 40) / 160)) * R_END);
-    items.forEach((i) => { if (y >= i.y) i.el.classList.add("in"); });
-  }
-  function loop() {
-    cur += (target - cur) * 0.08;
-    draw(cur);
-    if (Math.abs(target - cur) > 0.5) raf = requestAnimationFrame(loop);
-    else { cur = target; draw(cur); raf = 0; }
-  }
-  function onScroll() {
-    const t = targetY();
-    target = Math.max(target, t); // ip bir dəfə çəkildikdən sonra geri silinmir
-    if (!raf) raf = requestAnimationFrame(loop);
-  }
-  draw(cur);
-  addEventListener("scroll", onScroll, { passive: true });
-  addEventListener("resize", onScroll);
-  onScroll();
-})();
+/* ---------- Proqram: mirvari ipi sabit durur, maddələr görünəndə çıxır ---------- */
+document.querySelectorAll("#p2 .pi").forEach((el) => (RM ? el.classList.add("in") : io.observe(el)));
 
 /* ---------- Geri sayım ---------- */
 (() => {
