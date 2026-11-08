@@ -186,14 +186,14 @@ body {
   position: absolute; left: 0; right: 0; top: 8%;
   display: flex; flex-direction: column; align-items: center;
   margin: 0; text-align: center; font-weight: 400; white-space: nowrap;
-  font-family: 'Pinyon Script', 'Great Vibes', cursive;
+  font-family: 'Great Vibes', cursive;
   font-size: min(19vw, 112px, 10.5vh); line-height: 1.25;
   overflow: visible;
   /* qradiyent "background-clip: text" hərflərin quyruğunu kəsirdi — yerinə düz qızılı rəng + yüngül kölgə */
   color: #94702f;
   text-shadow: 0 1px 0 rgba(255, 245, 225, .35);
 }
-.iv-names span { font-size: .8em; line-height: 1.05; }
+.iv-names span { font-size: .62em; line-height: 1.1; }
 .iv-tap {
   position: absolute; left: 50%; top: 50%;
   transform: translateX(-50%);
