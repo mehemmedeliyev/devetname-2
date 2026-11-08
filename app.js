@@ -47,19 +47,12 @@ const GUEST = (() => {
   return v;
 })();
 (() => {
-  const to = document.getElementById("evTo");
-  const nm = document.getElementById("evName");
+  const to = document.getElementById("ivTo");
   if (GUEST) {
-    to.textContent = "Hörmətli";
-    nm.textContent = GUEST;
-    // uzun adlar üçün şrifti kiçilt
-    const n = GUEST.length;
-    nm.style.setProperty("--nf", (n <= 14 ? 11 : n <= 22 ? 8.8 : n <= 32 ? 7 : 5.8) + "cqi");
+    to.textContent = `Hörmətli ${GUEST}`;
+    if (GUEST.length > 22) to.classList.add("long");
     document.getElementById("ad").value = GUEST;
     document.title = `${GUEST} — Camal & Aysel toya dəvət edir`;
-  } else {
-    to.hidden = true;
-    nm.textContent = "Hörmətli qonaq";
   }
 })();
 
