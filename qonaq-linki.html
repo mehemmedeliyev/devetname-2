@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Qonaq linkləri — Camal &amp; Aysel</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; padding: 32px 16px 60px;
+    background: url(img/paper.webp) 0 0 / 260px repeat, #ece3d9;
+    font-family: 'Lora', Georgia, serif; color: rgb(84, 69, 55);
+  }
+  main { max-width: 640px; margin: 0 auto; }
+  h1 { font-family: 'Bodoni Moda', serif; font-weight: 400; letter-spacing: .14em; text-align: center; font-size: 30px; margin: 0 0 6px; }
+  p.lead { text-align: center; font-style: italic; color: rgb(125, 111, 97); margin: 0 0 24px; }
+  textarea {
+    width: 100%; min-height: 150px; padding: 14px; resize: vertical;
+    font: inherit; font-size: 16px; color: inherit;
+    background: rgba(255, 255, 255, .55); border: 2px solid rgb(125, 111, 97); outline: none;
+  }
+  .hint { font-size: 14px; font-style: italic; color: rgb(125, 111, 97); margin: 6px 0 18px; }
+  button, a.btn {
+    font: inherit; font-size: 14px; letter-spacing: .04em; cursor: pointer; text-decoration: none;
+    border: 2px solid rgb(125, 111, 97); background: rgb(140, 124, 108); color: rgb(242, 232, 222);
+    padding: 8px 14px; display: inline-block;
+  }
+  button.ghost, a.ghost { background: transparent; color: rgb(84, 69, 55); }
+  #make { display: block; margin: 0 auto 26px; padding: 11px 28px; font-size: 15px; }
+  ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  li { background: rgba(255, 255, 255, .6); border: 1px solid rgba(125, 111, 97, .35); padding: 14px; }
+  li .n { font-style: italic; font-size: 18px; margin-bottom: 6px; }
+  li .u { font-size: 12.5px; word-break: break-all; color: rgb(125, 111, 97); margin-bottom: 10px; }
+  li .row { display: flex; gap: 8px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<main>
+  <h1>QONAQ LİNKLƏRİ</h1>
+  <p class="lead">Hər qonağa öz adı ilə açılan dəvətnamə linki</p>
+
+  <textarea id="names" placeholder="Hər sətirdə bir ad yazın, məsələn:&#10;Leyla xanım&#10;Rəşad bəy və ailəsi&#10;Əziz dostumuz Nigar"></textarea>
+  <div class="hint">Ad zərfin üstündə “Hörmətli …” kimi görünəcək və cavab formasında avtomatik yazılacaq.</div>
+  <button id="make" type="button">LİNKLƏRİ HAZIRLA</button>
+
+  <ul id="out"></ul>
+</main>
+<script>
+  const BASE = location.href.replace(/qonaq-linki\.html.*$/, "");
+  const out = document.getElementById("out");
+  const ta = document.getElementById("names");
+  ta.value = localStorage.getItem("qonaqlar") || "";
+
+  function linkFor(name) { return BASE + "?ad=" + encodeURIComponent(name); }
+
+  function make() {
+    localStorage.setItem("qonaqlar", ta.value);
+    out.innerHTML = "";
+    const names = ta.value.split("\n").map((s) => s.replace(/\s+/g, " ").trim()).filter(Boolean);
+    names.forEach((name) => {
+      const url = linkFor(name);
+      const msg = `Hörmətli ${name}, sizi toyumuza dəvət edirik! 💍\nCamal & Aysel · 14.11.2026\n${url}`;
+      const li = document.createElement("li");
+      li.innerHTML = `<div class="n"></div><div class="u"></div><div class="row">
+        <button type="button" class="ghost copy">Linki kopyala</button>
+        <a class="btn wa" target="_blank" rel="noopener">WhatsApp-da göndər</a>
+        <a class="btn ghost open" target="_blank" rel="noopener">Bax</a></div>`;
+      li.querySelector(".n").textContent = name;
+      li.querySelector(".u").textContent = url;
+      li.querySelector(".wa").href = "https://wa.me/?text=" + encodeURIComponent(msg);
+      li.querySelector(".open").href = url;
+      const c = li.querySelector(".copy");
+      c.addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(url); c.textContent = "Kopyalandı ✓"; }
+        catch { prompt("Linki kopyalayın:", url); }
+        setTimeout(() => (c.textContent = "Linki kopyala"), 1800);
+      });
+      out.appendChild(li);
+    });
+  }
+  document.getElementById("make").addEventListener("click", make);
+  if (ta.value.trim()) make();
+</script>
+</body>
+</html>

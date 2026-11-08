@@ -40,10 +40,35 @@ musicBtn.addEventListener("click", () => {
   else { audio.pause(); musicBtn.classList.remove("on"); musicBtn.setAttribute("aria-label", "Musiqini aç"); }
 });
 
+/* Qonağın adı: linkdə ?ad=Leyla%20xanım olarsa zərfdə "Hörmətli Leyla xanım" yazılır */
+const GUEST = (() => {
+  const q = new URLSearchParams(location.search);
+  const v = (q.get("ad") || q.get("qonaq") || "").replace(/\s+/g, " ").trim().slice(0, 48);
+  return v;
+})();
+(() => {
+  const to = document.getElementById("evTo");
+  const nm = document.getElementById("evName");
+  if (GUEST) {
+    to.textContent = "Hörmətli";
+    nm.textContent = GUEST;
+    // uzun adlar üçün şrifti kiçilt
+    const n = GUEST.length;
+    nm.style.setProperty("--nf", (n <= 14 ? 9.5 : n <= 22 ? 7.6 : n <= 32 ? 6.2 : 5.2) + "cqi");
+    document.getElementById("ad").value = GUEST;
+    document.title = `${GUEST} — Camal & Aysel toya dəvət edir`;
+  } else {
+    to.hidden = true;
+    nm.textContent = "Hörmətli qonaq";
+  }
+})();
+
 function openInvite() {
   if (intro.classList.contains("open")) return;
   intro.classList.add("open");
   startMusic();
+  // fiyonkun mirvariləri səpələnir
+  pearlBurst(intro.querySelector(".ev-img"), { fx: 0.505, fy: 0.19, n: 50, power: 1.4, big: 1.7 });
   const t1 = RM ? 50 : 2300, t2 = RM ? 400 : 3500;
   setTimeout(() => {
     intro.classList.add("gone");
@@ -133,19 +158,19 @@ intro.focus({ preventScroll: true });
 })();
 
 /* ---------- Mirvari konfetti ---------- */
-function pearlBurst(fromEl) {
+function pearlBurst(fromEl, { fx = 0.5, fy = 0.5, n = 34, power = 1, big = 1 } = {}) {
   if (RM) return;
-  const fx = document.getElementById("fx");
+  const layer = document.getElementById("fx");
   const r = fromEl.getBoundingClientRect();
-  const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-  for (let k = 0; k < 34; k++) {
+  const cx = r.left + r.width * fx, cy = r.top + r.height * fy;
+  for (let k = 0; k < n; k++) {
     const p = document.createElement("i");
-    const size = 6 + Math.random() * 11;
+    const size = (6 + Math.random() * 11) * big;
     p.className = "pearl";
     p.style.cssText = `width:${size}px;height:${size}px;left:${cx - size / 2}px;top:${cy - size / 2}px`;
-    fx.appendChild(p);
+    layer.appendChild(p);
     const ang = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.3;
-    const v = 120 + Math.random() * 220;
+    const v = (120 + Math.random() * 220) * power;
     const dx = Math.cos(ang) * v, dy = Math.sin(ang) * v;
     const fall = 260 + Math.random() * 220;
     p.animate([
